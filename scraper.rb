@@ -4,7 +4,9 @@ require 'scraperwiki'
 agent = Mechanize.new
 url = 'https://morph.io/documentation/examples/australian_members_of_parliament'
 
-["1", "2", "3"].each do |page_number|
+last_page_number = agent.get(url).link_with(text: "Last").uri.query.delete("page=")
+
+("1"..last_page_number).each do |page_number|
   page = agent.get(url + "?page=" + page_number)
 
   page.at('.search-filter-results').search('li').each do |li|
